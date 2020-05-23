@@ -54,6 +54,7 @@ function convertParsedData (parsedData) {
   parsedData.map((cust) => {
       let customerObject = {...cust,active:true};
       bulkData.push(customerObject);
+      return true;
   })
 
   return bulkData;
