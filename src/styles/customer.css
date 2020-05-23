@@ -1,0 +1,54 @@
+#rounded {
+  width: 100%;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid grey;
+}
+
+#table-item {
+    width: 100%;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 10px;
+    margin: 20px 0px;
+    border: 1px solid grey;
+}
+
+#table-item:hover{
+    border: 1px solid #3f51b5;
+    border-width: medium; 
+}
+
+#grid {
+    margin-top: 20px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal {
+    --height : 50%;
+    --width: 80%;
+    --border-radius : 10px;
+}
+
+#table {
+    margin-top: 20px;
+    font-size: 1px;
+}
+
+.icon {
+    margin-right: 15px;
+}
+
+.MuiIconButton-root {
+    padding : 4px
+}
+
+.toast {
+    text-align: center;
+}

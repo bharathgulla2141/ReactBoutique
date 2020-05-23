@@ -1,0 +1,26 @@
+#item {
+    width: 100%;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.30);
+}
+
+#item:hover {
+    border: 1px solid;
+}
+
+#item-toolbar {
+    width: 100%;
+}
+
+#toolbar {
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+
+
