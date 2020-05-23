@@ -27,6 +27,7 @@ const InvestmentTable: React.FC = () => {
             <TableRow>
               <TableCell style={{ textAlign: "center" }}>Date</TableCell>
               <TableCell style={{ textAlign: "center" }}>Amount</TableCell>
+              <TableCell style={{ textAlign: "center" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

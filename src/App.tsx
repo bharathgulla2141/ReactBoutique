@@ -42,7 +42,7 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonPage>
           <Menu />
-          <IonContent id="menu" fullscreen>
+          <IonPage id="menu">
             <Switch>
               <Route exact path="/" render={() => <Redirect to="/home" />} />
               <Route path="/home" render={() => <Home />} exact={true} />
@@ -57,7 +57,7 @@ const App: React.FC = () => {
                 exact={true}
               />
             </Switch>
-          </IonContent>
+          </IonPage>
         </IonPage>
       </IonReactRouter>
     </IonApp>

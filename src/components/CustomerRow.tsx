@@ -29,6 +29,8 @@ const CustomerRow: React.FC<CustomerProps> = (props) => {
       rowfont: {
         fontSize: theme.spacing(1.5),
         padding: theme.spacing(1),
+        wordBreak : "break-all",
+        maxWidth : theme.spacing(12)
       },
     };
   });

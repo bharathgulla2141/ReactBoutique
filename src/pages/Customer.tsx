@@ -30,7 +30,7 @@ const CustomerPage: React.FC = () => {
   return (
     <>
       <Header header="Customers" />
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" scrollY={true} forceOverscroll={true} fullscreen={true}>
         <IonSegment onIonChange= { (e) => onSegmentChange(e)}>
           <IonSegmentButton value="add" className={addTab ? "segment-button-checked" : ''}> 
             <IonNote>Add</IonNote>

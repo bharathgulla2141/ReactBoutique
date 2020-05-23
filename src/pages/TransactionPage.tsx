@@ -1,32 +1,53 @@
-import React, { useContext } from "react";
-import { IonContent } from "@ionic/react";
+import React, { useState, useEffect } from "react";
+import {
+  IonContent,
+  IonSegment,
+  IonSegmentButton,
+  IonNote,
+} from "@ionic/react";
 import Header from "../components/Header";
-import { AppContext } from "../context/AppContext";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import CustomerSelectSearch from "../components/CustomerSelectSearch";
 
 const TransactionPage: React.FC = () => {
-  let { state } = useContext(AppContext);
+  let [dashboard, setDashboard] = useState(false);
+  let [payment, setPayment] = useState(false);
 
-  const handleChange = (event : any , newValue : any) => {
-        if(!(newValue == null)){
-            console.log(newValue.id);
-        }
-  }
+  useEffect(() => {
+    setDashboard(true);
+  }, []);
+
+  const handleChange = (event: any, newValue: any) => {
+    if (!(newValue == null)) {
+      console.log(newValue.id);
+    }
+  };
+
+  const onSegmentChange = (event: CustomEvent) => {
+    if (event.detail.value === "dashboard") {
+      setDashboard(true);
+      setPayment(false);
+    } else if (event.detail.value === "payment") {
+      setDashboard(false);
+      setPayment(true);
+    }
+  };
 
   return (
     <>
       <Header header="Transactions"></Header>
       <IonContent className="ion-padding">
-        <Autocomplete
-          options={state.customers}
-          getOptionLabel={(option: any) => option.fullName}
-          renderInput={(params) => (
-            <TextField {...params} label="Select Customer" variant="outlined" />
-          )}
-          onChange ={(event: any , newValue: any) => handleChange(event,newValue)}
-        />
-        
+        <IonSegment onIonChange={(e) => onSegmentChange(e)}>
+          <IonSegmentButton
+            value="dashboard"
+            className={dashboard ? "segment-button-checked" : ""}
+          >
+            <IonNote>Dashboard</IonNote>
+          </IonSegmentButton>
+          <IonSegmentButton value="payment">
+            <IonNote>Payment</IonNote>
+          </IonSegmentButton>
+        </IonSegment>
+        {payment && <CustomerSelectSearch handleChange={handleChange} />}
       </IonContent>
     </>
   );
