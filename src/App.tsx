@@ -1,13 +1,13 @@
-import React, {useEffect, useContext} from "react";
+import React, { useEffect, useContext } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { IonApp, IonPage, IonContent } from "@ionic/react";
+import { IonApp, IonPage, IonLoading } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
 import Menu from "./components/Menu";
 import CustomerPage from "./pages/Customer";
 import TransactionPage from "./pages/TransactionPage";
 import { AppContext } from "./context/AppContext";
-import {Observer} from "./firebase/observer";
+import { Observer } from "./firebase/observer";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -29,13 +29,11 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 const App: React.FC = () => {
-
-  let {dispatch} = useContext(AppContext);
+  let { dispatch } = useContext(AppContext);
 
   useEffect(() => {
     Observer(dispatch);
-  },[dispatch])
-
+  }, [dispatch]);
 
   return (
     <IonApp>
@@ -60,6 +58,12 @@ const App: React.FC = () => {
           </IonPage>
         </IonPage>
       </IonReactRouter>
+      <IonLoading
+        isOpen={true}
+        duration={5000}
+        message={"Loading Data ..."}
+        spinner="crescent"
+      ></IonLoading>
     </IonApp>
   );
 };

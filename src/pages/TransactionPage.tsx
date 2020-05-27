@@ -6,7 +6,9 @@ import {
   IonNote,
 } from "@ionic/react";
 import Header from "../components/Header";
-import CustomerSelectSearch from "../components/CustomerSelectSearch";
+import Payment from "../components/Payment";
+import Dashboard from "../components/Dashboard";
+import '../styles/transaction.css';
 
 const TransactionPage: React.FC = () => {
   let [dashboard, setDashboard] = useState(false);
@@ -15,12 +17,6 @@ const TransactionPage: React.FC = () => {
   useEffect(() => {
     setDashboard(true);
   }, []);
-
-  const handleChange = (event: any, newValue: any) => {
-    if (!(newValue == null)) {
-      console.log(newValue.id);
-    }
-  };
 
   const onSegmentChange = (event: CustomEvent) => {
     if (event.detail.value === "dashboard") {
@@ -41,13 +37,14 @@ const TransactionPage: React.FC = () => {
             value="dashboard"
             className={dashboard ? "segment-button-checked" : ""}
           >
-            <IonNote>Dashboard</IonNote>
+            <IonNote color="primary">Dashboard</IonNote>
           </IonSegmentButton>
           <IonSegmentButton value="payment">
-            <IonNote>Payment</IonNote>
+            <IonNote color="primary">Payment</IonNote>
           </IonSegmentButton>
         </IonSegment>
-        {payment && <CustomerSelectSearch handleChange={handleChange} />}
+        {dashboard && <Dashboard/>}
+        {payment && <Payment/>}
       </IonContent>
     </>
   );

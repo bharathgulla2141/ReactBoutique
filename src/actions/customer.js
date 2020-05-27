@@ -1,27 +1,30 @@
 import { fireStoreDb } from "../firebase/firebase";
 
-export const setCustomers = (dispatch) => {
+export const setCustomers = async (dispatch) => {
 
     let customersRef = fireStoreDb.collection('customers');
     
-    customersRef.orderBy('fullName').get().then(snapshot => {
+    let result = customersRef.orderBy('fullName').get().then(snapshot => {
         let customers = [];
         snapshot.forEach(doc => {
-            let {fullName,outStandingAmount,active,contact} = doc.data();
+            let {fullName,balance,active,contact} = doc.data();
             let customer = {
                 id : doc.id,
                 fullName : fullName,
-                outStandingAmount : outStandingAmount ? outStandingAmount : 0,
+                balance : balance ? balance : 0,
                 contact : contact,
                 active : active
             }
             customers.push(customer);
         });
-        dispatch({type:'SETCUSTOMERS',customers : customers})
+        dispatch({type:'SETCUSTOMERS',customers : customers});
+        return true;
       })
       .catch(err => {
         console.log('Error getting documents', err);
+        return false;
       });
+      return result;
 }
 
 export const addCustomersData = (parsedData) => {
@@ -42,9 +45,19 @@ export const addCustomersData = (parsedData) => {
 
 }
 
-export const addCustomer = (customer) => {
-  let customerRef = fireStoreDb.collection('customers').doc();
-  customerRef.set(customer);
+export const addCustomer = async (customer) => {
+  let customerRef = fireStoreDb.collection('customers').where('fullName','==',customer.fullName);
+   let addFlag = customerRef.get().then(snapshot => {
+    console.log(snapshot.empty);
+      if(snapshot.empty) {
+            fireStoreDb.collection('customers').doc().set(customer);
+            return true;
+      }
+      else {
+        return false;
+      }   
+  })
+  return addFlag;
 }
 
 function convertParsedData (parsedData) {

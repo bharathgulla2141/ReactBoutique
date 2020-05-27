@@ -1,0 +1,31 @@
+#transaction-toolbar {
+    margin-top: 10px;
+}
+
+#dashboard-toolbar {
+    margin-top: 10px;
+    border : 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.select {
+    border : 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding : 17px;
+    margin-top: 5px;
+}
+
+.select-text {
+    width : auto;
+}
+
+#alert h2{
+    font-size : 15px;
+}
+.card {
+    margin-top: 15px;
+    border : 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    background: rgba(40,167,69,.12549);
+    width: 100%;
+}

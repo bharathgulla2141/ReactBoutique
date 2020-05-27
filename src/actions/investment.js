@@ -1,8 +1,8 @@
 import { firebase,fireStoreDb } from "../firebase/firebase";
 
-export const setInvestments = (dispatch) => {
+export const setInvestments = async (dispatch) => {
   let investmentsRef = fireStoreDb.collection('investments');
-  investmentsRef.where('active','==',true).get().then(snapshot => {
+  let result = investmentsRef.where('active','==',true).get().then(snapshot => {
         let investments = [];
         snapshot.forEach(doc => {
             let {date,amount} = doc.data();
@@ -13,11 +13,14 @@ export const setInvestments = (dispatch) => {
             }
             investments.push(investment);
         });
-        dispatch({type:'SETINVESTMENTS',investments : investments})
+        dispatch({type:'SETINVESTMENTS',investments : investments});
+        return true;
       })
       .catch(err => {
         console.log('Error getting documents', err);
+        return false;
       });
+      return result;
 }
 
 export const addInvestment = (date,amount) => {

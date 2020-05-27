@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonItem, IonButton, IonNote, IonText } from "@ionic/react";
+import { IonItem, IonButton, IonText } from "@ionic/react";
 import XLSX from "xlsx";
 import { addCustomersData } from "../actions/customer";
 

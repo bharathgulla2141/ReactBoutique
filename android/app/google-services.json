@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "369010955722",
+    "firebase_url": "https://boutiqueapp-d0595.firebaseio.com",
+    "project_id": "boutiqueapp-d0595",
+    "storage_bucket": "boutiqueapp-d0595.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369010955722:android:ce8f970917fa2617672b33",
+        "android_client_info": {
+          "package_name": "com.boutique.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "369010955722-m5si95fq8ajk8g8rkptkgd4tmtvlm6t9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-jigs_4m_V9QVRCtVQKH4IHJNxgM_fRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "369010955722-m5si95fq8ajk8g8rkptkgd4tmtvlm6t9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

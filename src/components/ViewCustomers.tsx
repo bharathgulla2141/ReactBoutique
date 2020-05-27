@@ -10,7 +10,7 @@ import { search } from "ionicons/icons";
 import { IonIcon, IonItem, IonInput } from "@ionic/react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppContext } from "../context/AppContext";
-import { TableCell, Toolbar, TableSortLabel,Tooltip} from "@material-ui/core";
+import { TableCell, Toolbar, TableSortLabel, Tooltip } from "@material-ui/core";
 import CustomerRow from "./CustomerRow";
 
 interface sortedDesc {
@@ -23,21 +23,21 @@ const ViewCustomers: React.FC = () => {
   let [filteredCustomers, setFilteredCustomers] = useState<Array<any>>([]);
   let [filteredByName, setFilteredByName] = useState(false);
   let [sortedByAmount, setSortedByAmount] = useState(false);
-  let [searchText, setSearchText] = useState('');
+  let [searchText, setSearchText] = useState("");
   let [sortedDesc, setSortedDesc] = useState<sortedDesc>({ value: "asc" });
 
   useEffect(() => {
     mapContextToState(state.customers);
-  },[state.customers]);
+  }, [state.customers]);
 
-  const mapContextToState = (customers : any) => {
+  const mapContextToState = (customers: any) => {
     let customerArray: Array<any> = [];
-    customers.map((customer : any) => {
+    customers.map((customer: any) => {
       customerArray.push(customer);
       return true;
     });
     setFilteredCustomers(customerArray);
-  }
+  };
 
   const classes = makeStyles((theme) => {
     return {
@@ -67,29 +67,25 @@ const ViewCustomers: React.FC = () => {
 
   const sortFunction = () => {
     if (sortedDesc.value === "asc") {
-       filteredCustomers.sort(
-        (customer1: any, customer2: any) => {
-          return customer1.outStandingAmount - customer2.outStandingAmount;
-        }
-      );
-    } else if(sortedDesc.value === "desc"){
-       filteredCustomers.sort(
-        (customer1: any, customer2: any) => {
-          return customer2.outStandingAmount - customer1.outStandingAmount; 
-        }
-      );
-    }
-    else {
-      if(!filteredByName) {
+      let ascArray = filteredCustomers.sort((customer1: any, customer2: any) => {
+        return customer1.balance - customer2.balance;
+      });
+      mapContextToState(ascArray);
+    } else if (sortedDesc.value === "desc") {
+      let descArray = filteredCustomers.sort((customer1: any, customer2: any) => {
+        return customer2.balance - customer1.balance;
+      });
+      mapContextToState(descArray);
+    } else {
+      if (!filteredByName) {
         mapContextToState(state.customers);
-      }
-      else {
-        if(searchText.length > 0) {
+      } else {
+        if (searchText.length > 0) {
           let searchfiltered = state.customers.filter((customer: any) => {
             return customer.fullName.includes(searchText);
           });
           mapContextToState(searchfiltered);
-        }   
+        }
       }
     }
   };
@@ -113,7 +109,7 @@ const ViewCustomers: React.FC = () => {
 
   return (
     <React.Fragment>
-      <TableContainer id="table" component={Paper} >
+      <TableContainer id="table" component={Paper} style ={{background : "rgba(40,167,69,.12549)"}}>
         <Toolbar>
           <IonItem id="table-item" lines="none">
             <IonIcon className="icon" icon={search}></IonIcon>
@@ -129,7 +125,7 @@ const ViewCustomers: React.FC = () => {
               <TableCell className={classes().rowfont} />
               <TableCell className={classes().rowfont}>Full Name</TableCell>
               <TableCell className={classes().rowfont}>Contact</TableCell>
-              <TableCell 
+              <TableCell
                 className={classes().rowfont}
                 style={{ cursor: "pointer" }}
                 onClick={() => sortByAmount()}
@@ -137,7 +133,7 @@ const ViewCustomers: React.FC = () => {
                 <Tooltip title="Togglesort" placement="top" role="popover">
                   <span>Amount</span>
                 </Tooltip>
-               
+
                 <TableSortLabel
                   active={sortedByAmount}
                   direction={sortedDesc.value}
@@ -147,8 +143,13 @@ const ViewCustomers: React.FC = () => {
           </TableHead>
           <TableBody>
             {filteredCustomers.length > 0 &&
-              filteredCustomers.map((customer: any,index) => {
-                return <CustomerRow key={Math.random()*(index+1)} customer={customer} />;
+              filteredCustomers.map((customer: any, index) => {
+                return (
+                  <CustomerRow
+                    key={Math.random() * (index + 1)}
+                    customer={customer}
+                  />
+                );
               })}
           </TableBody>
         </Table>

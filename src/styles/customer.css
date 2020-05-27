@@ -12,8 +12,9 @@
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 10px;
-    margin: 20px 0px;
+    margin-top: 20px;
     border: 1px solid grey;
+    --background: rgba(40,167,69,.12549);
 }
 
 #table-item:hover{
