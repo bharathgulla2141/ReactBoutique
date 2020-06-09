@@ -1,31 +1,34 @@
-import React, { useState, useEffect } from "react";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Collapse from "@material-ui/core/Collapse";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { TableCell, TableRow, Collapse, IconButton } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
-import { IonIcon, IonText } from "@ionic/react";
+import { IonIcon } from "@ionic/react";
 import { chevronUp, chevronDown } from "ionicons/icons";
-import { Table, TableHead, TableBody } from "@material-ui/core";
 import { getTransactionsById } from "../actions/transaction";
-import HistoryRow from "./HistoryRow";
-import {formatNumber} from "../helpers/util";
+import HistoryTable from "./HistoryTable";
+
+import { formatNumber } from "../helpers/util";
 
 interface CustomerProps {
   customer: any;
 }
-const CustomerRow: React.FC<CustomerProps> = (props) => {
+const CustomerRow: React.FC<CustomerProps> = ({ customer }) => {
   let [open, setOpen] = useState(false);
-  let [transactionHistory, setTransactionHistory] = useState<any>([]);
+  let [transactions, setTransactions] = useState<any>([]);
 
-  useEffect(() => {
-    getTransactionHistory();
-  },[])
-
-  const getTransactionHistory = () => {
-      let transactions = getTransactionsById(props.customer.id);
-      setTransactionHistory(transactions);
+  const getTransactionHistory = async () => {
+    let result: any;
+    if (transactions.length === 0) {
+      result = await getTransactionsById(customer.id);
+      if (result.status) {
+        setTransactions(result.transactions);
+        setTimeout(() => {
+          setOpen(!open);
+        }, 500);
+      }
+    } else {
+      setOpen(!open);
+    }
   };
 
   const classes = makeStyles((theme) => {
@@ -58,7 +61,7 @@ const CustomerRow: React.FC<CustomerProps> = (props) => {
           <IconButton
             aria-label="expand row"
             className={classes().buttonpadding}
-            onClick={() => setOpen(!open)}
+            onClick={() => getTransactionHistory()}
           >
             {open ? (
               <IonIcon icon={chevronUp} size="small"></IonIcon>
@@ -68,39 +71,25 @@ const CustomerRow: React.FC<CustomerProps> = (props) => {
           </IconButton>
         </TableCell>
         <TableCell className={classes().rowfont}>
-          {props.customer.fullName}
+          <Link
+            to={`/update?id=${customer.id}&name=${customer.fullName}&contact=${customer.contact}`}
+            className="link" color="primary"
+          >
+            {customer.fullName}
+          </Link>
         </TableCell>
+        <TableCell className={classes().rowfont}>{customer.contact}</TableCell>
         <TableCell className={classes().rowfont}>
-          {props.customer.contact}
-        </TableCell>
-        <TableCell className={classes().rowfont}>
-          {formatNumber(props.customer.balance)}
+          {formatNumber(customer.balance)}
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open}>
-            <Box margin={1}>
-              <IonText>Transaction History</IonText>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell className={classes().transactionfont}>Date</TableCell>
-                    <TableCell className={classes().transactionfont}>Type</TableCell>
-                    <TableCell className={classes().transactionfont}>Amount</TableCell>
-                    <TableCell className={classes().transactionfont}>Balance</TableCell>
-                  </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  {transactionHistory.length > 0 &&
-                    transactionHistory.map((transaction: any,index : any) => {
-                      return (
-                          <HistoryRow key={Math.random() * (index + 1)} transaction={transaction} classes={classes}/>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </Box>
+            <HistoryTable
+              transactions={transactions}
+              classes={classes}
+            ></HistoryTable>
           </Collapse>
         </TableCell>
       </TableRow>

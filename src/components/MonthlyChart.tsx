@@ -35,6 +35,7 @@ const MonthlyChart: React.FC<dataProps> = (props) => {
   let [chartData, setChartData] = useState(initialdata);
 
   useEffect(() => {
+    console.log(chartRef);
     initialdata.datasets[0].data = data;
     setChartData(initialdata);
   }, [data]);

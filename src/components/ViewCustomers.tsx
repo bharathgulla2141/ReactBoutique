@@ -2,16 +2,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import { search } from "ionicons/icons";
-import { IonIcon, IonItem, IonInput } from "@ionic/react";
-import { makeStyles } from "@material-ui/core/styles";
+import { IonIcon, IonItem, IonInput, IonLoading } from "@ionic/react";
 import { AppContext } from "../context/AppContext";
-import { TableCell, Toolbar, TableSortLabel, Tooltip } from "@material-ui/core";
-import CustomerRow from "./CustomerRow";
+import { Toolbar } from "@material-ui/core";
+import CustomerTable from "./CustomerTable";
 
 interface sortedDesc {
   value: "desc" | "asc" | undefined;
@@ -25,31 +20,17 @@ const ViewCustomers: React.FC = () => {
   let [sortedByAmount, setSortedByAmount] = useState(false);
   let [searchText, setSearchText] = useState("");
   let [sortedDesc, setSortedDesc] = useState<sortedDesc>({ value: "asc" });
+  let [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
-    mapContextToState(state.customers);
+    setTimeout(() => {mapContextToState(state.customers)},1000);
   }, [state.customers]);
 
   const mapContextToState = (customers: any) => {
-    let customerArray: Array<any> = [];
-    customers.map((customer: any) => {
-      customerArray.push(customer);
-      return true;
-    });
+    let customerArray: Array<any> = [...customers];
     setFilteredCustomers(customerArray);
+    setShowLoader(false);
   };
-
-  const classes = makeStyles((theme) => {
-    return {
-      buttonpadding: {
-        padding: theme.spacing(0.5),
-      },
-      rowfont: {
-        fontSize: theme.spacing(1.5),
-        padding: theme.spacing(1),
-      },
-    };
-  });
 
   const searchCustomer = (e: CustomEvent) => {
     if (!(e.detail.value === "")) {
@@ -67,14 +48,18 @@ const ViewCustomers: React.FC = () => {
 
   const sortFunction = () => {
     if (sortedDesc.value === "asc") {
-      let ascArray = filteredCustomers.sort((customer1: any, customer2: any) => {
-        return customer1.balance - customer2.balance;
-      });
+      let ascArray = filteredCustomers.sort(
+        (customer1: any, customer2: any) => {
+          return customer1.balance - customer2.balance;
+        }
+      );
       mapContextToState(ascArray);
     } else if (sortedDesc.value === "desc") {
-      let descArray = filteredCustomers.sort((customer1: any, customer2: any) => {
-        return customer2.balance - customer1.balance;
-      });
+      let descArray = filteredCustomers.sort(
+        (customer1: any, customer2: any) => {
+          return customer2.balance - customer1.balance;
+        }
+      );
       mapContextToState(descArray);
     } else {
       if (!filteredByName) {
@@ -109,51 +94,33 @@ const ViewCustomers: React.FC = () => {
 
   return (
     <React.Fragment>
-      <TableContainer id="table" component={Paper} style ={{background : "rgba(40,167,69,.12549)"}}>
+      <TableContainer
+        id="table"
+        component={Paper}
+        style={{ background: "rgba(40,167,69,.12549)" }}
+      >
         <Toolbar>
           <IonItem id="table-item" lines="none">
             <IonIcon className="icon" icon={search}></IonIcon>
             <IonInput
-              className="input"
               onIonChange={(e) => searchCustomer(e)}
             ></IonInput>
           </IonItem>
         </Toolbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes().rowfont} />
-              <TableCell className={classes().rowfont}>Full Name</TableCell>
-              <TableCell className={classes().rowfont}>Contact</TableCell>
-              <TableCell
-                className={classes().rowfont}
-                style={{ cursor: "pointer" }}
-                onClick={() => sortByAmount()}
-              >
-                <Tooltip title="Togglesort" placement="top" role="popover">
-                  <span>Amount</span>
-                </Tooltip>
-
-                <TableSortLabel
-                  active={sortedByAmount}
-                  direction={sortedDesc.value}
-                ></TableSortLabel>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCustomers.length > 0 &&
-              filteredCustomers.map((customer: any, index) => {
-                return (
-                  <CustomerRow
-                    key={Math.random() * (index + 1)}
-                    customer={customer}
-                  />
-                );
-              })}
-          </TableBody>
-        </Table>
+        <CustomerTable
+          customers={filteredCustomers}
+          sortedByAmount={sortedByAmount}
+          sortedDesc={sortedDesc}
+          sortByAmount ={sortByAmount}
+          showLoader ={showLoader}
+        ></CustomerTable>
       </TableContainer>
+      <IonLoading
+        isOpen={false}
+        message="Loading ..."
+        duration={1000}
+        spinner="crescent"
+      ></IonLoading>
     </React.Fragment>
   );
 };

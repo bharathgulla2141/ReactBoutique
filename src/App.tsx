@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { IonApp, IonPage, IonLoading } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import Menu from "./components/Menu";
 import CustomerPage from "./pages/Customer";
 import TransactionPage from "./pages/TransactionPage";
+import TransactionHistoryPage from "./pages/TransactionHistoryPage";
+import UpdateCustomer from "./pages/UpdateCustomer";
 import { AppContext } from "./context/AppContext";
 import { Observer } from "./firebase/observer";
 
@@ -27,13 +29,21 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import CustomLoader from "./components/CustomLoader";
 
 const App: React.FC = () => {
-  let { dispatch } = useContext(AppContext);
+  let {state, dispatch } = useContext(AppContext);
+  let [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
     Observer(dispatch);
-  }, [dispatch]);
+  },[dispatch]);
+
+  useEffect(() => {
+    setTimeout(()=> {
+      setShowLoader(false);
+    },5000) 
+  },[state])
 
   return (
     <IonApp>
@@ -54,16 +64,20 @@ const App: React.FC = () => {
                 render={() => <TransactionPage />}
                 exact={true}
               />
+              <Route
+                path="/transactionHistory"
+                render={() => <TransactionHistoryPage />}
+                exact={true}
+              />
+              <Route
+                path="/update"
+                render={(props) => <UpdateCustomer {...props} />}
+              />
             </Switch>
           </IonPage>
         </IonPage>
       </IonReactRouter>
-      <IonLoading
-        isOpen={true}
-        duration={5000}
-        message={"Loading Data ..."}
-        spinner="crescent"
-      ></IonLoading>
+      <CustomLoader open={showLoader}></CustomLoader>
     </IonApp>
   );
 };

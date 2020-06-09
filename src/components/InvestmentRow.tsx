@@ -3,25 +3,37 @@ import { TableRow, TableCell } from "@material-ui/core";
 import { trash } from "ionicons/icons";
 import { IonIcon, IonButton } from "@ionic/react";
 import { deleteInvestment } from "../actions/investment";
-import {formatNumber,formatDate} from "../helpers/util";
+import { formatNumber, formatDate } from "../helpers/util";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 interface InvestmentProps {
   investment: any;
 }
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiTableCell: {
+      root: {
+        padding: "12px",
+        fontSize: "0.8rem",
+        borderBottom: "1px solid rgba(0,0,0,0.3)",
+      },
+    },
+  },
+});
+
 const InvestmentRow: React.FC<InvestmentProps> = (props) => {
   return (
-    <TableRow>
-      <TableCell style={{ textAlign: "center" }}>{formatDate(props.investment.date.seconds,'DD MMMM YYYY')}</TableCell>
-      <TableCell style={{ textAlign: "center" }}>{formatNumber(props.investment.amount)}</TableCell>
-      <TableCell style={{ textAlign: "center" }}>
-        <IonButton
-          fill="clear"
-          onClick={() => deleteInvestment(props.investment.id)}
-        >
-          <IonIcon icon={trash} size="small"></IonIcon>
-        </IonButton>
-      </TableCell>
-    </TableRow>
+    <ThemeProvider theme={theme}>
+      <TableRow>
+        <TableCell>
+          {formatDate(props.investment.date.seconds, "DD MMM YYYY")}
+        </TableCell>
+        <TableCell>{formatNumber(props.investment.amount)}</TableCell>
+        <TableCell>No data</TableCell>
+        <TableCell>No data</TableCell>
+      </TableRow>
+    </ThemeProvider>
   );
 };
 

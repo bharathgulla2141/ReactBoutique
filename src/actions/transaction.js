@@ -58,11 +58,11 @@ export const saveTransaction = async (customer, amount, type) => {
   return customerstatus && transactionstatus;
 };
 
-export const getTransactionsById = (customerId) => {
+export const getTransactionsById = async (customerId) => {
   let customerRef = fireStoreDb.collection("customers").doc(customerId);
   let transactionsRef = fireStoreDb.collection("transactions");
   let transactions = [];
-  transactionsRef
+  let status = transactionsRef
     .where("customerId", "==", customerRef)
     .orderBy("date")
     .get()
@@ -80,6 +80,8 @@ export const getTransactionsById = (customerId) => {
         };
         transactions.push(transaction);
       });
-    });
-  return transactions;
+      return true;
+    } 
+    );
+  return {transactions,status};
 };

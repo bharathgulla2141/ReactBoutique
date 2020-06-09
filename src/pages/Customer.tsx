@@ -18,8 +18,8 @@ const CustomerPage: React.FC = () => {
 
   const onSegmentChange = (event : CustomEvent) => {
       if(event.detail.value === 'add'){
-        setAddTab(true);
         setViewTab(false);
+        setAddTab(true);  
       }
       else if(event.detail.value === 'view') {
         setAddTab(false);
@@ -40,7 +40,7 @@ const CustomerPage: React.FC = () => {
           </IonSegmentButton>
         </IonSegment>
 
-        {addTab && <AddCustomer></AddCustomer>}
+        {addTab && <AddCustomer/>}
         {viewTab && <ViewCustomers/>}
         
       </IonContent>

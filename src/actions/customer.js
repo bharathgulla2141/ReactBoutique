@@ -48,7 +48,6 @@ export const addCustomersData = (parsedData) => {
 export const addCustomer = async (customer) => {
   let customerRef = fireStoreDb.collection('customers').where('fullName','==',customer.fullName);
    let addFlag = customerRef.get().then(snapshot => {
-    console.log(snapshot.empty);
       if(snapshot.empty) {
             fireStoreDb.collection('customers').doc().set(customer);
             return true;
@@ -58,6 +57,14 @@ export const addCustomer = async (customer) => {
       }   
   })
   return addFlag;
+}
+
+export const updateCustomer = async (customer) => {
+  let customerRef = fireStoreDb.collection('customers').doc(customer.customerId);
+  let updateStatus = customerRef.update({fullName:customer.name,contact:customer.contact}).then(snapshot => {
+      return true;
+  })
+  return updateStatus;
 }
 
 function convertParsedData (parsedData) {

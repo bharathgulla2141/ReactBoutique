@@ -1,20 +1,19 @@
-import * as firebase from 'firebase';
+import firebase, { firestore } from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC82z9G_RBdA4_TYg9sWB0kZbk-iHXA7fw",
-    authDomain: "react-expensify-e372e.firebaseapp.com",
-    databaseURL: "https://react-expensify-e372e.firebaseio.com",
-    projectId: "react-expensify-e372e",
-    storageBucket: "react-expensify-e372e.appspot.com",
-    messagingSenderId: "738717040310",
-    appId: "1:738717040310:web:8f58338501c33db94e7017",
-    measurementId: "G-1J2KK9B0ZW"
+    apiKey: process.env.REACT_APP_apiKey,
+    authDomain: process.env.REACT_APP_authDomain,
+    databaseURL: process.env.REACT_APP_databaseURL,
+    projectId: process.env.REACT_APP_projectId,
+    storageBucket: process.env.REACT_APP_storageBucket,
+    messagingSenderId: process.env.REACT_APP_messagingSenderId,
+    appId: process.env.REACT_APP_appId
 };
 
 firebase.initializeApp(firebaseConfig);
 
-const googleProvider = new firebase.auth.GoogleAuthProvider();
+const fireStoreDb = firestore(firebase);
 
-const fireStoreDb = firebase.firestore();
-
-export {firebase, googleProvider, fireStoreDb}
+export {firebase, fireStoreDb}
