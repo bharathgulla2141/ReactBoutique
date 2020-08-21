@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { IonApp, IonPage, IonLoading } from "@ionic/react";
+import { IonApp, IonPage } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
 import Menu from "./components/Menu";

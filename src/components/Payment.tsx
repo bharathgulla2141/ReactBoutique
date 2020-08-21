@@ -6,18 +6,22 @@ import {
   IonSelectOption,
   IonButton,
   IonLoading,
+  IonDatetime,
+  IonItem,
 } from "@ionic/react";
 import TextField from "@material-ui/core/TextField";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { saveTransaction } from "../actions/transaction";
 import CustomAlert from "./CustomAlert";
 import { Typography } from "@material-ui/core";
+import moment from "moment";
 
 const Payment: React.FC = () => {
   let [type, setType] = useState("");
   let [customer, setCustomer] = useState<any>(null);
   let [amount, setAmount] = useState("");
   let [message, setMessage] = useState("");
+  let [date, setDate] = useState("");
   let [open, setOpen] = useState(false);
   let [isError, setIsError] = useState(false);
   let [buttons, setButtons] = useState([]);
@@ -51,9 +55,13 @@ const Payment: React.FC = () => {
     }
   };
 
+  const onDateChange = (e: CustomEvent) => {
+    setDate(e.detail.value);
+  };
+
   const onSubmit = (e: any) => {
     e.preventDefault();
-    if (!customer || !type || !amount) {
+    if (!customer || !type || !amount || !date) {
       setAlertFields(true, "Please enter all the fields", true, [
         { title: "Okay", handler: handleCustomAlert },
       ]);
@@ -89,7 +97,12 @@ const Payment: React.FC = () => {
     setShowLoader(true);
     let transactionCustomer = customer;
     setCustomer(null);
-    let paymentStatus = await saveTransaction(transactionCustomer, amount, type);
+    let paymentStatus = await saveTransaction(
+      transactionCustomer,
+      amount,
+      type,
+      moment(date).unix()
+    );
     if (paymentStatus) {
       setShowLoader(false);
       setAlertFields(true, "Transaction saved successfully", false, [
@@ -147,6 +160,15 @@ const Payment: React.FC = () => {
             style={{ marginTop: "5px" }}
             onChange={(e) => handleAmount(e)}
           ></TextField>
+        </IonToolbar>
+        <IonToolbar id="transaction-toolbar">
+          <IonItem id="trans-item" lines="none">
+            <IonDatetime
+              placeholder="Select Date"
+              value={date}
+              onIonChange={(e) => onDateChange(e)}
+            />
+          </IonItem>
         </IonToolbar>
         <IonToolbar id="transaction-toolbar">
           <IonButton type="submit">Submit</IonButton>

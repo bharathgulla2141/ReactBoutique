@@ -26,7 +26,7 @@ export const setTransactions = async (dispatch) => {
     return result;
 };
 
-export const saveTransaction = async (customer, amount, type) => {
+export const saveTransaction = async (customer, amount, type, date) => {
   let documentRef = fireStoreDb.collection("customers").doc(customer.id);
   let newTransactionRef = fireStoreDb.collection("transactions").doc();
   let oldBalance = customer.balance;
@@ -48,7 +48,7 @@ export const saveTransaction = async (customer, amount, type) => {
     name: customer.fullName,
     amount: Number(amount),
     type: type,
-    date: new firebase.firestore.Timestamp.fromDate(new Date()),
+    date: new firebase.firestore.Timestamp(date,0),
     balance: newBalance,
     customerId: documentRef,
   };
