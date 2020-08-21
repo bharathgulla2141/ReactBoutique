@@ -2,16 +2,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import { search } from "ionicons/icons";
-import { IonIcon, IonItem, IonInput } from "@ionic/react";
-import { makeStyles } from "@material-ui/core/styles";
+import { IonIcon, IonItem, IonInput, IonLoading } from "@ionic/react";
 import { AppContext } from "../context/AppContext";
-import { TableCell, Toolbar, TableSortLabel,Tooltip} from "@material-ui/core";
-import CustomerRow from "./CustomerRow";
+import { Toolbar } from "@material-ui/core";
+import CustomerTable from "./CustomerTable";
 
 interface sortedDesc {
   value: "desc" | "asc" | undefined;
@@ -20,71 +15,62 @@ interface sortedDesc {
 const ViewCustomers: React.FC = () => {
   const { state } = useContext(AppContext);
 
-  let {customers} = state;
-
   let [filteredCustomers, setFilteredCustomers] = useState<Array<any>>([]);
   let [filteredByName, setFilteredByName] = useState(false);
   let [sortedByAmount, setSortedByAmount] = useState(false);
+  let [searchText, setSearchText] = useState("");
   let [sortedDesc, setSortedDesc] = useState<sortedDesc>({ value: "asc" });
+  let [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
-    mapContextToState();
-  },[state.customers]);
+    setTimeout(() => {mapContextToState(state.customers)},1000);
+  }, [state.customers]);
 
-  const mapContextToState = () => {
-    let customerArray: Array<any> = [];
-    customers.map((customer : any) => {
-      customerArray.push(customer);
-      return true;
-    });
+  const mapContextToState = (customers: any) => {
+    let customerArray: Array<any> = [...customers];
     setFilteredCustomers(customerArray);
-  }
-
-  const classes = makeStyles((theme) => {
-    return {
-      buttonpadding: {
-        padding: theme.spacing(0.5),
-      },
-      rowfont: {
-        fontSize: theme.spacing(1.5),
-        padding: theme.spacing(1),
-      },
-    };
-  });
+    setShowLoader(false);
+  };
 
   const searchCustomer = (e: CustomEvent) => {
     if (!(e.detail.value === "")) {
-      let filtered = filteredCustomers.filter((customer: any) => {
+      let filtered = state.customers.filter((customer: any) => {
         return customer.fullName.includes(e.detail.value);
       });
-      setFilteredCustomers(filtered);
+      mapContextToState(filtered);
       setFilteredByName(true);
     } else {
-      setFilteredCustomers(state.customers);
+      mapContextToState(state.customers);
       setFilteredByName(false);
     }
+    setSearchText(e.detail.value);
   };
 
   const sortFunction = () => {
     if (sortedDesc.value === "asc") {
-       filteredCustomers.sort(
+      let ascArray = filteredCustomers.sort(
         (customer1: any, customer2: any) => {
-          return customer1.outStandingAmount - customer2.outStandingAmount;
+          return customer1.balance - customer2.balance;
         }
       );
-    } else if(sortedDesc.value === "desc"){
-       filteredCustomers.sort(
+      mapContextToState(ascArray);
+    } else if (sortedDesc.value === "desc") {
+      let descArray = filteredCustomers.sort(
         (customer1: any, customer2: any) => {
-          return customer2.outStandingAmount - customer1.outStandingAmount; 
+          return customer2.balance - customer1.balance;
         }
       );
-    }
-    else {
-      if(filteredByName) {
-        console.log('FilteredByName');
-      }
-      else {
-        mapContextToState();
+      mapContextToState(descArray);
+    } else {
+      if (!filteredByName) {
+        mapContextToState(state.customers);
+      } else {
+        if (searchText.length > 0) {
+          let searchfiltered = state.customers.filter((customer: any) => {
+            return customer.fullName.includes(searchText);
+          });
+          mapContextToState(searchfiltered);
+        }
       }
     }
   };
@@ -108,46 +94,33 @@ const ViewCustomers: React.FC = () => {
 
   return (
     <React.Fragment>
-      <TableContainer id="table" component={Paper}>
+      <TableContainer
+        id="table"
+        component={Paper}
+        style={{ background: "rgba(40,167,69,.12549)" }}
+      >
         <Toolbar>
           <IonItem id="table-item" lines="none">
             <IonIcon className="icon" icon={search}></IonIcon>
             <IonInput
-              className="input"
               onIonChange={(e) => searchCustomer(e)}
             ></IonInput>
           </IonItem>
         </Toolbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes().rowfont} />
-              <TableCell className={classes().rowfont}>Full Name</TableCell>
-              <TableCell className={classes().rowfont}>Contact</TableCell>
-              <TableCell 
-                className={classes().rowfont}
-                style={{ cursor: "pointer" }}
-                onClick={() => sortByAmount()}
-              >
-                <Tooltip title="Togglesort" placement="top" role="popover">
-                  <span>Amount</span>
-                </Tooltip>
-               
-                <TableSortLabel
-                  active={sortedByAmount}
-                  direction={sortedDesc.value}
-                ></TableSortLabel>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCustomers.length > 0 &&
-              filteredCustomers.map((customer: any) => {
-                return <CustomerRow key={customer.id} customer={customer} />;
-              })}
-          </TableBody>
-        </Table>
+        <CustomerTable
+          customers={filteredCustomers}
+          sortedByAmount={sortedByAmount}
+          sortedDesc={sortedDesc}
+          sortByAmount ={sortByAmount}
+          showLoader ={showLoader}
+        ></CustomerTable>
       </TableContainer>
+      <IonLoading
+        isOpen={false}
+        message="Loading ..."
+        duration={1000}
+        spinner="crescent"
+      ></IonLoading>
     </React.Fragment>
   );
 };

@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "BoutiqueApplication",
+  "appId": "com.boutique.app",
+  "appName": "BoutiqueApp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

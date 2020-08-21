@@ -1,44 +1,24 @@
-import React from "react";
-import { IonRow, IonItem, IonDatetime, IonGrid, IonToolbar, IonText, IonButton } from "@ionic/react";
-import TextField from "@material-ui/core/TextField";
+import React, { useState } from "react";
+import { IonToolbar, IonText, IonToggle } from "@ionic/react";
 import InvestmentTable from "./InvestmentTable";
+import InvestmentForm from "./InvestmentForm";
 import "../styles/investment.css";
 
 const Investments: React.FC = () => {
-
-  const onDateChange =(e : CustomEvent) => {
-      console.log(e.detail);
-  }
-  
+  let [toggleChecked, setToggleChecked] = useState(false);
   return (
     <>
-      <InvestmentTable/>
-      <IonToolbar className="ion-text-center" id="toolbar">
-        <IonText>
-         Add Investment
-        </IonText>
+      <InvestmentTable />
+      <IonToolbar id="toolbar">
+        <IonText>Add Investment</IonText>
+        <IonToggle
+          slot="end"
+          checked={toggleChecked}
+          onIonChange={(e) => setToggleChecked(e.detail.checked)}
+        ></IonToggle>
       </IonToolbar>
-      <IonGrid>
-        <form>
-        <IonRow>
-          <IonItem id="item" lines="none">
-            <IonDatetime placeholder="Select Date"
-              onIonChange={(e) => onDateChange(e)}
-            />
-          </IonItem>
-        </IonRow>
-        <IonRow>
-          <TextField
-            label=" Enter Amount"
-            variant="outlined"
-            style={{ width: "100%",marginBottom:"16px" }}
-            inputProps={{ style: { padding: "17px 14px" } }}
-          ></TextField>
-        </IonRow>
-        
-        <IonButton expand="block">Submit</IonButton>
-        </form>
-      </IonGrid>
+      {toggleChecked && <InvestmentForm />}
+      
     </>
   );
 };

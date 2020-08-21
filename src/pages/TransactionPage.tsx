@@ -1,32 +1,50 @@
-import React, { useContext } from "react";
-import { IonContent } from "@ionic/react";
+import React, { useState, useEffect } from "react";
+import {
+  IonContent,
+  IonSegment,
+  IonSegmentButton,
+  IonNote,
+} from "@ionic/react";
 import Header from "../components/Header";
-import { AppContext } from "../context/AppContext";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import Payment from "../components/Payment";
+import Dashboard from "../components/Dashboard";
+import '../styles/transaction.css';
 
 const TransactionPage: React.FC = () => {
-  let { state } = useContext(AppContext);
+  let [dashboard, setDashboard] = useState(false);
+  let [payment, setPayment] = useState(false);
 
-  const handleChange = (event : any , newValue : any) => {
-        if(!(newValue == null)){
-            console.log(newValue.id);
-        }
-  }
+  useEffect(() => {
+    setDashboard(true);
+  }, []);
+
+  const onSegmentChange = (event: CustomEvent) => {
+    if (event.detail.value === "dashboard") {
+      setDashboard(true);
+      setPayment(false);
+    } else if (event.detail.value === "payment") {
+      setDashboard(false);
+      setPayment(true);
+    }
+  };
 
   return (
     <>
       <Header header="Transactions"></Header>
       <IonContent className="ion-padding">
-        <Autocomplete
-          options={state.customers}
-          getOptionLabel={(option: any) => option.fullName}
-          renderInput={(params) => (
-            <TextField {...params} label="Select Customer" variant="outlined" />
-          )}
-          onChange ={(event: any , newValue: any) => handleChange(event,newValue)}
-        />
-        
+        <IonSegment onIonChange={(e) => onSegmentChange(e)}>
+          <IonSegmentButton
+            value="dashboard"
+            className={dashboard ? "segment-button-checked" : ""}
+          >
+            <IonNote color="primary">Dashboard</IonNote>
+          </IonSegmentButton>
+          <IonSegmentButton value="payment">
+            <IonNote color="primary">Payment</IonNote>
+          </IonSegmentButton>
+        </IonSegment>
+        {dashboard && <Dashboard/>}
+        {payment && <Payment/>}
       </IonContent>
     </>
   );

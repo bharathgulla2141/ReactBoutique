@@ -12,7 +12,7 @@ import {
   IonImg,
   IonMenuToggle,
 } from "@ionic/react";
-import { personOutline, homeOutline } from "ionicons/icons";
+import { personOutline, homeOutline, statsChartOutline } from "ionicons/icons";
 import "../styles/menu.css";
 import transaction from "../images/icons8-transaction-50.png";
 
@@ -51,6 +51,16 @@ const Menu: React.FC = () => {
                   className="transaction-img"
                 ></IonImg>
                 <IonLabel>Transactions</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle autoHide={false}>
+              <IonItem routerLink="/transactionHistory">
+              <IonIcon
+                  slot="start"
+                  icon={statsChartOutline}
+                  color="dark"
+                ></IonIcon>
+                <IonLabel>Transaction History</IonLabel>
               </IonItem>
             </IonMenuToggle>
           </IonList>
